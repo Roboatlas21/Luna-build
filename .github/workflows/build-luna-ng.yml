@@ -1,5 +1,5 @@
 name: Luna NG public snapshot build
-# Public validation source snapshot: ee9b8e7cca44a852e1b321f62397a0758f7b55de
+# Public validation source snapshot: 78965afa38136bb046dbc4623239d4b4a7f204d8
 
 # Build requests on the named build branch run ARM32 only after validation passes.
 # Revalidate finalized Moonlight/Luna hardening and cache-key tests.
@@ -55,7 +55,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: Roboatlas21/xbmc-p3i
-          ref: ${{ inputs.snapshot_ref || 'ee9b8e7cca44a852e1b321f62397a0758f7b55de' }}
+          ref: ${{ inputs.snapshot_ref || '78965afa38136bb046dbc4623239d4b4a7f204d8' }}
           path: snapshot
           fetch-depth: 1
           sparse-checkout: moonlight-build

@@ -1,4 +1,5 @@
 name: Luna NG public snapshot build
+# Public validation source snapshot: 2bcb216381f535d8865c0d97d8f2a005f7c4e199
 
 # Push events run validation only. An explicit manual run can also build ARM32.
 # Revalidate finalized Moonlight/Luna hardening and cache-key tests.

@@ -190,6 +190,12 @@ jobs:
       CCACHE_DISABLE: '1'
       MOONLIGHT_BUILD_VFM: ${{ (inputs.build_vfm_runtime == true || (github.event_name == 'push' && github.ref == 'refs/heads/build/luna-ng-20261030-final' && contains(github.event.head_commit.message, '[run-final-native-vfm]'))) && 'yes' || 'no' }}
     steps:
+      - name: Check out build helper scripts
+        uses: actions/checkout@v4
+        with:
+          path: ci
+          persist-credentials: false
+
       - name: Check out public source snapshot
         uses: actions/checkout@v4
         with:

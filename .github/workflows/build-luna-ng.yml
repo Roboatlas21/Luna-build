@@ -1,7 +1,7 @@
 name: Luna NG public snapshot build
-# Public validation source snapshot: 56327f1bf255c629de1c63af69a8881274523334
+# Public validation source snapshot: ee9b8e7cca44a852e1b321f62397a0758f7b55de
 
-# Push events run validation only. An explicit manual run can also build ARM32.
+# Build requests on the named build branch run ARM32 only after validation passes.
 # Revalidate finalized Moonlight/Luna hardening and cache-key tests.
 # Validate latest Luna reliability fixes and crash regressions.
 # Confirm final immutable Luna export and corrected native-cache provenance.
@@ -55,7 +55,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: Roboatlas21/xbmc-p3i
-          ref: ${{ inputs.snapshot_ref || 'build/luna-ng-snapshot' }}
+          ref: ${{ inputs.snapshot_ref || 'ee9b8e7cca44a852e1b321f62397a0758f7b55de' }}
           path: snapshot
           fetch-depth: 1
           sparse-checkout: moonlight-build
@@ -97,7 +97,7 @@ jobs:
         run: |
           set -euo pipefail
           sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends pkg-config libavcodec-dev libavutil-dev libdrm-dev libasound2-dev libopus-dev libevdev-dev libudev-dev libexpat1-dev libexpat1-dev
+          sudo apt-get install -y --no-install-recommends pkg-config libavcodec-dev libavutil-dev libdrm-dev libasound2-dev libopus-dev libevdev-dev libudev-dev libexpat1-dev libcurl4-openssl-dev libssl-dev uuid-dev openssl
 
       - name: Moonlight VFM and decoder tests
         id: vfm

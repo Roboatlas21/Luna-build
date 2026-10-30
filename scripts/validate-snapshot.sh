@@ -71,6 +71,8 @@ case "$GROUP" in
     ;;
   moonlight-packaging)
     cd "$WORKSPACE/moonlight" || exit 2
+    # Includes the full Apollo HTTP/TLS pairing and production decoder-loop regressions.
+    run_checked native_python python3 -m unittest discover -s tests -v
     # Cross-repository pin failures must surface before multi-hour ARM32 work.
     run_checked source_pins python3 packaging/coreelec-ng/vfm/check-source-pins.py "$WORKSPACE/snapshot/moonlight-build/source-lock.json"
     run_checked source_pin_tests python3 -m unittest discover -s tests -p test_vfm_source_pins.py -v

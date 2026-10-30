@@ -8,7 +8,7 @@ name: Luna NG public snapshot build
 on:
   # Changes here rerun the complete grouped public validation.
   push:
-    branches: [main]
+    branches: [main, build/luna-ng-20261030-final]
     paths: ['.github/workflows/build-luna-ng.yml']
   workflow_dispatch:
     inputs:
@@ -176,7 +176,7 @@ jobs:
     needs: prepare
     # A green validation push must not automatically start a multi-hour build.
     # Run workflow manually with build_native=true once every host group passes.
-    if: ${{ github.event_name == 'workflow_dispatch' && inputs.build_native == true }}
+    if: ${{ (github.event_name == 'workflow_dispatch' && inputs.build_native == true) || (github.event_name == 'push' && github.ref == 'refs/heads/build/luna-ng-20261030-final' && contains(github.event.head_commit.message, '[run-final-native-vfm]')) }}
     runs-on: ubuntu-24.04
     timeout-minutes: 330
     env:
@@ -187,7 +187,7 @@ jobs:
       # Package stamps make cached build output reusable without retaining
       # huge, redundant ccache object files.
       CCACHE_DISABLE: '1'
-      MOONLIGHT_BUILD_VFM: ${{ inputs.build_vfm_runtime == true && 'yes' || 'no' }}
+      MOONLIGHT_BUILD_VFM: ${{ (inputs.build_vfm_runtime == true || (github.event_name == 'push' && github.ref == 'refs/heads/build/luna-ng-20261030-final' && contains(github.event.head_commit.message, '[run-final-native-vfm]'))) && 'yes' || 'no' }}
     steps:
       - name: Check out public source snapshot
         uses: actions/checkout@v4
@@ -434,7 +434,7 @@ jobs:
         run: bash moonlight/packaging/coreelec-ng/build-stage.sh deps-final "$GITHUB_WORKSPACE/CoreELEC" "$GITHUB_WORKSPACE/native-build-logs"
 
       - name: Build private FFmpeg, stock decoder modules and VFM bridge
-        if: ${{ inputs.build_vfm_runtime == true }}
+        if: ${{ (inputs.build_vfm_runtime == true || (github.event_name == 'push' && github.ref == 'refs/heads/build/luna-ng-20261030-final' && contains(github.event.head_commit.message, '[run-final-native-vfm]'))) }}
         shell: bash
         timeout-minutes: 180
         run: |
@@ -472,7 +472,7 @@ jobs:
           cat native/build-info.txt
 
       - name: Collect and smoke-test the complete VFM runtime
-        if: ${{ inputs.build_vfm_runtime == true }}
+        if: ${{ (inputs.build_vfm_runtime == true || (github.event_name == 'push' && github.ref == 'refs/heads/build/luna-ng-20261030-final' && contains(github.event.head_commit.message, '[run-final-native-vfm]'))) }}
         shell: bash
         env:
           SOURCE_GIT_SHA: ${{ needs.prepare.outputs.moonlight_sha }}
@@ -524,7 +524,7 @@ jobs:
       - name: Upload installable add-on
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ inputs.build_vfm_runtime == true && 'luna-coreelec21-ng-vfm-addon' || 'luna-coreelec21-ng-addon' }}
+          name: ${{ (inputs.build_vfm_runtime == true || (github.event_name == 'push' && github.ref == 'refs/heads/build/luna-ng-20261030-final' && contains(github.event.head_commit.message, '[run-final-native-vfm]'))) && 'luna-coreelec21-ng-vfm-addon' || 'luna-coreelec21-ng-addon' }}
           path: output/
           if-no-files-found: error
           retention-days: 3
